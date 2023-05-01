@@ -126,6 +126,12 @@ internal class WebSocketService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             cm.registerDefaultNetworkCallback(networkCallback)
         }
+
+        if (lastReceivedMessage.get() == NOT_LOADED) {
+            missingMessageUtil.lastReceivedMessage { lastReceivedMessage.set(it) }
+            //notify missed messages.
+            notifyMissedNotifications()
+        }
         fetchApps()
     }
 
