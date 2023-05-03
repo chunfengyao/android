@@ -52,6 +52,10 @@ internal class WebSocketService : Service() {
                 Log.i("WebSocket: Network available, reconnect if needed.")
                 connection?.start()
             }
+
+            override fun onLost(network: Network) {
+                showForegroundNotification("Network is missing, waiting now...")
+            }
         }
     private val appIdToApp = ConcurrentHashMap<Long, Application>()
 
@@ -197,13 +201,6 @@ internal class WebSocketService : Service() {
     }
 
     private fun onNetworkFailure(minutes: Int) {
-        val status = getString(R.string.websocket_not_connected)
-        val intervalUnit = resources
-            .getQuantityString(R.plurals.websocket_retry_interval, minutes, minutes)
-        showForegroundNotification(
-            status,
-            "${getString(R.string.websocket_reconnect)} $intervalUnit"
-        )
     }
 
     private fun onOpen() {
